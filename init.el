@@ -27,9 +27,6 @@
       myPackages)
 
 
-(add-to-list 'load-path
-              "~/.emacs.d/lisp/yasnippet")
-
 ;; C++ related setups ;;
 
 (require 'yasnippet)
@@ -48,9 +45,43 @@
                   (save-excursion
                     (goto-char (posn-point (event-start event)))
                     (highlight-symbol-at-point))))
+;; pick either auto-complete or company
 
-(require 'auto-complete-clang)
-;;(setq ac-clang-auto-save t)
+;(add-to-list 'load-path "~/.emacs.d/elpa/auto-complete-20160710.1544/")
+;(require 'auto-complete-config)
+;(add-to-list 'ac-dictionary-directories "~/.emacs.d/elpa/auto-complete-20160710.1544/dict")
+
+;(require 'auto-complete-clang)
+;(setq ac-quick-help-delay 0.5)
+;(define-key ac-mode-map  [(control tab)] 'auto-complete)
+;(defun my-ac-config ()
+;  (setq-default ac-sources '(ac-source-abbrev ac-source-dictionary ac-source-words-in-same-mode-buffers))
+;  (add-hook 'emacs-lisp-mode-hook 'ac-emacs-lisp-mode-setup)
+;  ;; (add-hook 'c-mode-common-hook 'ac-cc-mode-setup)
+;  (add-hook 'ruby-mode-hook 'ac-ruby-mode-setup)
+;  (add-hook 'css-mode-hook 'ac-css-mode-setup)
+;  (add-hook 'auto-complete-mode-hook 'ac-common-setup)
+;  (global-auto-complete-mode t))
+;(defun my-ac-cc-mode-setup ()
+;  (setq ac-sources (append '(ac-source-clang ac-source-yasnippet) ac-sources)))
+;(add-hook 'c-mode-common-hook 'my-ac-cc-mode-setup)
+;;; ac-source-gtags
+;(my-ac-config)
+
+;; company-mode
+(require 'company)
+(add-hook 'after-init-hook 'global-company-mode)
+
+(setq company-backends (delete 'company-semantic company-backends))
+(require 'cc-mode)
+(define-key c-mode-map  [(tab)] 'company-complete)
+(define-key c++-mode-map  [(tab)] 'company-complete)
+
+(add-to-list 'company-backends 'company-c-headers)
+(require 'company-c-headers)
+(add-to-list 'company-c-headers-path-system "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk/usr/include/")
+(company-mode)
+
 
 ;; Package: smartparens
 (require 'smartparens-config)
@@ -160,13 +191,3 @@
      (expand-file-name "~/.emacs.d/elpa/package.el"))
   (package-initialize))
 
-
-;;; This was installed by package-install.el.
-;;; This provides support for the package system and
-;;; interfacing with ELPA, the package archive.
-;;; Move this code earlier if you want to reference
-;;; packages in your .emacs.
-(when
-    (load
-     (expand-file-name "~/.emacs.d/elpa/package.el"))
-  (package-initialize))
